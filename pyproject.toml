@@ -1,0 +1,13 @@
+[project]
+name = "ivr-intent-router"
+version = "2.0.0"
+description = "IVR intent classification with route rules, call turns, and confidence-gated transfers."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

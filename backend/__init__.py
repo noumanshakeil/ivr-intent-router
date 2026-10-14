@@ -1,1 +1,2 @@
-"""Backend package."""
+"""IVR Intent Router application package."""
+__version__ = "2.0.0"

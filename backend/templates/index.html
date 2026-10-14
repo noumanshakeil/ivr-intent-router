@@ -1,52 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{{ title }}</title>
-  <link rel="stylesheet" href="/static/styles.css" />
-</head>
-<body>
-  <main>
-    <h1>{{ title }}</h1>
-    <p class="sub">{{ description }} · LLM <span class="pill">{{ llm_mode }}</span></p>
-    <div class="grid">
-      <section class="card">
-        <h2>Create intent</h2>
-        <form method="post" action="/ui/create">
-        <label>utterance</label><input name="utterance" placeholder="utterance" required />
-<label>route</label><input name="route" placeholder="route" required />
-          <button type="submit">Save</button>
-        </form>
-        <h2 style="margin-top:1.25rem">AI action: {{ action }}</h2>
-        <p class="sub">{{ action_desc }}</p>
-        <form method="post" action="/ui/action">
-          <label>prompt</label>
-          <textarea name="prompt" rows="4" placeholder="Describe what you need..."></textarea>
-          <button type="submit">Run {{ action }}</button>
-        </form>
-        {% if last_result %}
-        <h3>Last result</h3>
-        <pre>{{ last_result }}</pre>
-        {% endif %}
-      </section>
-      <section class="card">
-        <h2>{{ resource }} ({{ items|length }})</h2>
-        <table>
-          <thead><tr><th>id</th><th>data</th></tr></thead>
-          <tbody>
-          {% for item in items %}
-            <tr>
-              <td>{{ item.id }}</td>
-              <td><code>{{ item }}</code></td>
-            </tr>
-          {% else %}
-            <tr><td colspan="2">No items yet</td></tr>
-          {% endfor %}
-          </tbody>
-        </table>
-      </section>
-    </div>
-  </main>
-</body>
-</html>
+<html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>{{ title }}</title><link rel="stylesheet" href="/static/styles.css"/></head>
+<body><main>
+<h1>{{ title }}</h1><p class="sub">Define intents &amp; routes, then classify utterances.</p>
+<div class="grid">
+<section class="card">
+  <h2>Intent</h2>
+  <form method="post" action="/ui/intents"><label>Name</label><input name="name" required/>
+  <label>Description</label><textarea name="description" rows="2"></textarea><button type="submit">Save</button></form>
+  <h2>Rule</h2>
+  <form method="post" action="/ui/rules"><label>Intent</label><input name="intent_name" required/>
+  <label>Destination</label><input name="destination" value="queue.billing"/>
+  <label>Min confidence</label><input name="min_confidence" type="number" step="0.01" value="0.5"/>
+  <button type="submit">Add rule</button></form>
+</section>
+<section class="card">
+  <h2>Route utterance</h2>
+  <form method="post" action="/ui/route"><label>Utterance</label>
+  <textarea name="utterance" rows="3" required>{{ utterance or '' }}</textarea><button type="submit">Classify</button></form>
+  {% if last %}<pre>{{ last }}</pre>{% endif %}
+  <h3>Recent turns</h3>
+  {% for t in turns %}<div class="sub">{{ t.intent_name }} → {{ t.destination }} ({{ t.confidence }}) · {{ t.utterance }}</div>{% endfor %}
+</section>
+</div></main></body></html>
